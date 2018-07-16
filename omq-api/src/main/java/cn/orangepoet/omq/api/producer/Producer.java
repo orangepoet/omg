@@ -1,4 +1,4 @@
-package cn.orangepoet.omq.api;
+package cn.orangepoet.omq.api.producer;
 
 import cn.orangepoet.omq.api.model.OmqMessage;
 
