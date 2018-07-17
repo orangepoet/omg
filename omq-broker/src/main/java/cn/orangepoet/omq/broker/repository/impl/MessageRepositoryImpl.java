@@ -5,8 +5,8 @@ import cn.orangepoet.omq.api.exception.InvalidIndexException;
 import cn.orangepoet.omq.api.exception.SubjectNotExistsException;
 import cn.orangepoet.omq.api.model.OmqMessage;
 import cn.orangepoet.omq.broker.repository.MessageRepository;
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Preconditions;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

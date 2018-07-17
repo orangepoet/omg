@@ -26,6 +26,7 @@
         <lombok.version>1.16.20</lombok.version>
         <apache.common-lang.version>3.7</apache.common-lang.version>
         <fastjson.version>1.2.31</fastjson.version>
+        <guava.version>19.0</guava.version>
     </properties>
 
     <dependencyManagement>
@@ -50,6 +51,11 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -59,6 +65,21 @@
             <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>maven-net-cn</id>
+            <name>Maven China Mirror</name>
+            <url>http://maven.net.cn/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
