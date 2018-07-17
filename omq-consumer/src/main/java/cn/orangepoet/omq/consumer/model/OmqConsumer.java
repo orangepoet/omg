@@ -1,4 +1,4 @@
-package cn.orangepoet.omq.api.consumer;
+package cn.orangepoet.omq.consumer.model;
 
 import java.lang.annotation.*;
 

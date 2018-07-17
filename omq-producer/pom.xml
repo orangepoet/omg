@@ -6,20 +6,21 @@
         <artifactId>omq</artifactId>
         <groupId>cn.orangepoet</groupId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../omq</relativePath>
+        <relativePath>../omq/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>omq-api</artifactId>
+    <artifactId>omq-producer</artifactId>
+
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <groupId>cn.orangepoet</groupId>
+            <artifactId>omq-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -1,4 +1,4 @@
-package cn.orangepoet.omq.broker.contract;
+package cn.orangepoet.omq.api.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

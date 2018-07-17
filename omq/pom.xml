@@ -17,6 +17,8 @@
     <modules>
         <module>../omq-broker</module>
         <module>../omq-api</module>
+        <module>../omq-producer</module>
+        <module>../omq-consumer</module>
     </modules>
 
     <packaging>pom</packaging>
