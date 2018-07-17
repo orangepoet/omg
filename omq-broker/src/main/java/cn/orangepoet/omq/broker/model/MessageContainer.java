@@ -28,8 +28,22 @@ public class MessageContainer {
     }
 
     public void putMessages(String subject, List<OmqMessage> messages) {
-        List<OmqMessage> omqMessages = messageMap.putIfAbsent(subject, new ArrayList<>());
-        ReentrantLock lock = messageLockMap.putIfAbsent(subject, new ReentrantLock());
+        List<OmqMessage> omqMessages = messageMap.get(subject);
+        if (omqMessages == null) {
+            omqMessages = new ArrayList<>();
+            List<OmqMessage> omqMessages1 = messageMap.putIfAbsent(subject, omqMessages);
+            if (omqMessages1 != null) {
+                omqMessages = omqMessages1;
+            }
+        }
+        ReentrantLock lock = messageLockMap.get(subject);
+        if (lock == null) {
+            lock = new ReentrantLock();
+            ReentrantLock lock1 = messageLockMap.putIfAbsent(subject, lock);
+            if (lock1 != null) {
+                lock = lock1;
+            }
+        }
         lock.lock();
         try {
             omqMessages.addAll(messages);

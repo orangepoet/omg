@@ -2,17 +2,16 @@ package cn.orangepoet.omq.api.contract;
 
 import cn.orangepoet.omq.api.model.Foo;
 import cn.orangepoet.omq.api.model.OmqMessage;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author chengz
@@ -34,7 +33,7 @@ public class ServiceClientTest {
         Assert.assertNotNull(response);
         Assert.assertEquals("foo", response.getSubject());
         Assert.assertEquals("orange", response.getName());
-        Assert.assertEquals(new Integer(-1), response.getIndex());
+        Assert.assertEquals(new Integer(2), response.getIndex());
     }
 
     @Test
@@ -44,7 +43,7 @@ public class ServiceClientTest {
         request.setSubject("foo");
         request.setIndex(2);
         UpdateConsumerIndexResponse response = serviceClient.updateConsumerIndex(request);
-        Assert.assertTrue(response.getResult() == UpdateConsumerIndexResponse.RESULT_SUCCESS);
+        Assert.assertTrue(response.getResult() == Response.RESULT_SUCCESS);
     }
 
     @Test
@@ -61,14 +60,15 @@ public class ServiceClientTest {
     public void postMessage() {
         PostMessageRequest request = new PostMessageRequest();
         request.setSubject("foo");
+        OmqMessage omqMessage = new OmqMessage();
 
-        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(new Foo("foo1")));
-        OmqMessage omqMessage = new OmqMessage(1L, "foo", jsonObject);
-        List<OmqMessage> messages = Collections.singletonList(omqMessage);
-        request.setMessages(messages);
+        omqMessage.setMessageId(1L);
+        omqMessage.setSubject("foo");
+        omqMessage.setMessageBody(new Foo("foo1"));
+        request.setMessages(Collections.singletonList(omqMessage));
 
         PostMessageResponse response = serviceClient.postMessage(request);
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.getResult() == PostMessageResponse.RESULT_SUCCESS);
+        Assert.assertTrue(response.getResult() == Response.RESULT_SUCCESS);
     }
 }

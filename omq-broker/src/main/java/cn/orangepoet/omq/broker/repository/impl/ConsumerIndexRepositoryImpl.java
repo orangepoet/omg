@@ -19,7 +19,14 @@ public class ConsumerIndexRepositoryImpl implements ConsumerIndexRepository {
     public void updateIndex(String consumer, String subject, Integer index) throws UpdateIndexException {
         Preconditions.checkArgument(!StringUtils.isBlank(consumer), "consumer is empty");
 
-        CustomerIndex customerIndex = customerIndexMap.putIfAbsent(consumer, new CustomerIndex(consumer));
+        CustomerIndex customerIndex = customerIndexMap.get(subject);
+        if (customerIndex == null) {
+            customerIndex = new CustomerIndex(consumer);
+            CustomerIndex customerIndex1 = customerIndexMap.putIfAbsent(consumer, customerIndex);
+            if (customerIndex1 != null) {
+                customerIndex = customerIndex1;
+            }
+        }
         customerIndex.updateIndex(subject, index);
     }
 

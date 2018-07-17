@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class MessageRepositoryImpl implements MessageRepository {
-    private MessageContainer messageContainer = new MessageContainer();
+    private final MessageContainer messageContainer = new MessageContainer();
 
     @Override
     public List<OmqMessage> getMsgList(String subject, Integer index) {

@@ -4,6 +4,7 @@ import cn.orangepoet.omq.api.contract.GetMessageRequest;
 import cn.orangepoet.omq.api.contract.GetMessageResponse;
 import cn.orangepoet.omq.api.contract.PostMessageRequest;
 import cn.orangepoet.omq.api.contract.PostMessageResponse;
+import cn.orangepoet.omq.api.contract.Response;
 import cn.orangepoet.omq.api.model.OmqMessage;
 import cn.orangepoet.omq.broker.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,13 @@ public class MessageController {
 
     @PostMapping("/message/postmessage")
     public PostMessageResponse postMessage(@RequestBody PostMessageRequest request) {
+        PostMessageResponse response = new PostMessageResponse();
         try {
             messageRepository.appendMsgList(request.getSubject(), request.getMessages());
-            return PostMessageResponse.success();
+            response.setResult(Response.RESULT_SUCCESS);
         } catch (Exception e) {
-            return PostMessageResponse.failed();
+            response.setResult(Response.RESULT_FAILED);
         }
+        return response;
     }
 }

@@ -1,6 +1,5 @@
 package cn.orangepoet.omq.api.contract;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@AllArgsConstructor
 public class GetConsumerIndexResponse {
     private String subject;
     private String name;
