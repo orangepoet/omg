@@ -18,6 +18,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,8 +32,6 @@ import java.util.concurrent.TimeUnit;
 public class ConsumerRegistBeanPostProcessor implements BeanPostProcessor {
     @Autowired
     private ServiceClient serviceClient;
-
-    private final Map<String, Integer> customerIndexs = new ConcurrentHashMap<>();
 
     private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(4);
 
@@ -52,35 +51,29 @@ public class ConsumerRegistBeanPostProcessor implements BeanPostProcessor {
         String subject = omqConsumer.value();
         String consumer = omqConsumer.consumer();
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-                    Integer index = customerIndexs.get(consumer);
-                    if (index == null || index < 0) {
-                        GetConsumerIndexRequest  getConsumerIndexRequest = new GetConsumerIndexRequest();
-                        getConsumerIndexRequest.setSubject(subject);
-                        getConsumerIndexRequest.setConsumer(consumer);
-                        GetConsumerIndexResponse consumerIndex = serviceClient.getConsumerIndex(getConsumerIndexRequest);
-                        if (consumerIndex.getIndex() > 0) {
-                            index = consumerIndex.getIndex();
-                        } else {
-                            index = 0;
-                        }
-                    }
+
+                    GetConsumerIndexRequest getConsumerIndexRequest = new GetConsumerIndexRequest();
+                    getConsumerIndexRequest.setSubject(subject);
+                    getConsumerIndexRequest.setConsumer(consumer);
+                    GetConsumerIndexResponse consumerIndex = serviceClient.getConsumerIndex(getConsumerIndexRequest);
+                    Integer index = Optional.ofNullable(consumerIndex).map(i -> i.getIndex()).orElse(0);
                     GetMessageRequest getMessageRequest = new GetMessageRequest();
                     getMessageRequest.setSubject(subject);
                     getMessageRequest.setIndex(index);
                     GetMessageResponse getMessageResponse = serviceClient.getMessage(getMessageRequest);
-                    if (getMessageResponse != null && getMessageResponse.getMessages() != null) {
+                    if (getMessageResponse != null
+                            && getMessageResponse.getMessages() != null
+                            && !getMessageResponse.getMessages().isEmpty()) {
                         try {
                             for (OmqMessage omqMessage : getMessageResponse.getMessages()) {
                                 ReflectionUtils.invokeMethod(method, bean, omqMessage);
+                                index++;
                             }
                             UpdateConsumerIndexRequest updateConsumerIndexRequest = new UpdateConsumerIndexRequest();
                             updateConsumerIndexRequest.setIndex(index);
                             updateConsumerIndexRequest.setConsumer(consumer);
                             updateConsumerIndexRequest.setSubject(subject);
-                            UpdateConsumerIndexResponse updateConsumerIndexResponse = serviceClient.updateConsumerIndex(updateConsumerIndexRequest);
-                            if (updateConsumerIndexResponse.getResult() == UpdateConsumerIndexResponse.RESULT_SUCCESS) {
-                                customerIndexs.put(consumer, index);
-                            }
+                            serviceClient.updateConsumerIndex(updateConsumerIndexRequest);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
