@@ -10,5 +10,5 @@ import java.util.List;
 @Setter
 public class GetMessageResponse {
     private List<OmqMessage> messages;
-    private Integer index;
+    private Integer nextIndex;
 }
